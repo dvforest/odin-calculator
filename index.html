@@ -42,7 +42,7 @@
             if (op === "/") {
                 result = divide(a, b);
             }
-            return Number(result.toFixed(clampDecimals)); // use Number() to remove any zeros
+            return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
         }
 
         console.log(operate("/", 5, 12));
