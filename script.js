@@ -1,12 +1,23 @@
 let a, b;
 let op = "";
+let display;
 const clampDecimals = 8;
 const width = 200;
-const height = 300;
+const height = 200;
 
-const container = document.querySelector(".flex-container");
-container.style.width = width + "px";
-container.style.height = height + "px";
+const mainDiv = document.querySelector(".main-div");
+mainDiv.style.width = width + "px";
+mainDiv.style.height = height + "px";
+
+const displayDiv = document.createElement("div");
+displayDiv.setAttribute("class", "display-div");
+displayDiv.style.height = height * 0.25 + "px"; // 1/4 height
+mainDiv.appendChild(displayDiv);
+
+const numberDiv = document.createElement("div");
+numberDiv.setAttribute("class", "number-div");
+numberDiv.style.height = height * 0.75 + "px"; // 3/4 height
+mainDiv.appendChild(numberDiv);
 
 const orderedNumbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
 orderedNumbers.forEach(num => {
@@ -15,7 +26,7 @@ orderedNumbers.forEach(num => {
     button.style.width = width / 3 + "px";
     button.setAttribute("id", num);
     button.setAttribute("class", "number");
-    container.appendChild(button);
+    numberDiv.appendChild(button);
 });
 
 function add(a, b) {
