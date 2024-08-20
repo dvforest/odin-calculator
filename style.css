@@ -1,0 +1,14 @@
+body * {
+    border: 1px rgb(220, 220, 220) solid;
+}
+
+.flex-container {
+    display: flex;
+    margin: auto;
+    margin-top: 50px;
+    flex-wrap: wrap;
+}
+
+.number {
+    flex: 1 1 auto;
+}
