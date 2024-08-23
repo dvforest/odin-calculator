@@ -1,4 +1,6 @@
 .main-div {
+    display: flex;
+    flex-direction: column;
     margin: auto;
     margin-top: 50px;
 }
@@ -6,13 +8,38 @@
 .display-div {
     flex: 1 1 auto;
     border: 2px rgb(116, 116, 116) solid;
+    text-align: right;
+    padding: 15px;
+}
+
+.top-operator-div {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.bottom-div {
+    display: flex;
+    flex: 4 1 auto;
 }
 
 .number-div {
     display: flex;
+    flex: 3 1 0;
     flex-wrap: wrap;
 }
 
-.number {
+.right-operator-div {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column
+}
+
+.number-button {
+    flex: 1 1 33%;
+    padding: 15px;    
+}
+
+.operator-button {
     flex: 1 1 auto;
+    padding: 15px;
 }

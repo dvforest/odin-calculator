@@ -1,9 +1,13 @@
-let a, b;
-let op = "";
-let display;
-const clampDecimals = 8;
+
 const width = 200;
-const height = 200;
+const height = 300;
+const clampDecimals = 8;
+
+let input = {
+    a: 0,
+    b: 0,
+    operator: "",
+}
 
 const mainDiv = document.querySelector(".main-div");
 mainDiv.style.width = width + "px";
@@ -11,23 +15,65 @@ mainDiv.style.height = height + "px";
 
 const displayDiv = document.createElement("div");
 displayDiv.setAttribute("class", "display-div");
-displayDiv.style.height = height * 0.25 + "px"; // 1/4 height
+displayDiv.textContent = "0";
 mainDiv.appendChild(displayDiv);
+
+const topOperatorDiv = document.createElement("div");
+topOperatorDiv.setAttribute("class", "top-operator-div");
+mainDiv.appendChild(topOperatorDiv);
+
+const bottomDiv = document.createElement("div");
+bottomDiv.setAttribute("class", "bottom-div");
+mainDiv.appendChild(bottomDiv);
 
 const numberDiv = document.createElement("div");
 numberDiv.setAttribute("class", "number-div");
-numberDiv.style.height = height * 0.75 + "px"; // 3/4 height
-mainDiv.appendChild(numberDiv);
+bottomDiv.appendChild(numberDiv);
 
-const orderedNumbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
-orderedNumbers.forEach(num => {
+const rightOperatorDiv = document.createElement("div");
+rightOperatorDiv.setAttribute("class", "right-operator-div");
+bottomDiv.appendChild(rightOperatorDiv);
+
+const numbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
+numbers.forEach(num => {
     let button = document.createElement("button");
     button.textContent = num;
-    button.style.width = width / 3 + "px";
     button.setAttribute("id", num);
-    button.setAttribute("class", "number");
+    button.setAttribute("class", "number-button");
     numberDiv.appendChild(button);
 });
+
+const operators = [
+    {
+        type: "/",
+        div: "top",
+    },
+    {
+        type: "*",
+        div: "top",
+    },
+    {
+        type: "-",
+        div: "top",
+    },
+    {
+        type: "+",
+        div: "right",
+    },
+    {
+        type: "=",
+        div: "right",
+    },
+];
+operators.forEach(op => {
+    let button = document.createElement("button");
+    button.textContent = op.type;
+    button.setAttribute("id", op.type);
+    button.setAttribute("class", "operator-button");
+    let div = document.getElementsByClassName(`${op.div}-operator-div`)[0];
+    div.appendChild(button);
+});
+
 
 function add(a, b) {
     return a + b;
