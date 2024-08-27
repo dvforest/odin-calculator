@@ -45,6 +45,7 @@ numbers.forEach(num => {
     button.textContent = num;
     button.setAttribute("id", num);
     button.setAttribute("class", "number-button");
+    button.addEventListener("click", (e) => {console.log(`input number ${e.target.id}`)});
     numberDiv.appendChild(button);
 });
 
@@ -75,6 +76,7 @@ operators.forEach(op => {
     button.textContent = op.type;
     button.setAttribute("id", op.type);
     button.setAttribute("class", "operator-button");
+    button.addEventListener("click", (e) => {console.log(`input operator ${e.target.id}`)});
     let div = document.getElementsByClassName(`${op.div}-operator-div`)[0];
     div.appendChild(button);
 });
