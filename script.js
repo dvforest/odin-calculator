@@ -112,5 +112,3 @@ function operate(op, a, b) {
     }
     return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
 }
-
-console.log(operate("/", 5, 12));
