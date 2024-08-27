@@ -13,10 +13,15 @@ const mainDiv = document.querySelector(".main-div");
 mainDiv.style.width = width + "px";
 mainDiv.style.height = height + "px";
 
-const displayDiv = document.createElement("div");
-displayDiv.setAttribute("class", "display-div");
-displayDiv.textContent = "0";
-mainDiv.appendChild(displayDiv);
+const operationDiv = document.createElement("div");
+operationDiv.setAttribute("class", "operation-div");
+operationDiv.textContent = "0";
+mainDiv.appendChild(operationDiv);
+
+const inputDiv = document.createElement("div");
+inputDiv.setAttribute("class", "input-div");
+inputDiv.textContent = "0";
+mainDiv.appendChild(inputDiv);
 
 const topOperatorDiv = document.createElement("div");
 topOperatorDiv.setAttribute("class", "top-operator-div");
