@@ -7,6 +7,28 @@ let input = {
     a: 0,
     b: 0,
     operator: "",
+    operation: "",
+    
+    update: function(button) {
+        //if a number is clicked        
+            //if operator is ""
+                //if a is zero
+                    // a = button clicked
+                //else
+                    // a = a + button clicked (as string, then back to number)
+            //else
+                //if b is zero
+                    // b = button clicked
+                //else
+                    //b = b + button clicked (as string, then back to number)
+        //if an operator is clicked
+            //if it's "="
+                // operation = a + " " + operator + " " + b + "="
+                //operate(operator, a, b)            
+            //else
+                //operator = button clicked
+                //operation = a + " " + operator
+    },
 }
 
 const mainDiv = document.querySelector(".main-div");
