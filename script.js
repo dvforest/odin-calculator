@@ -40,7 +40,6 @@ numbers.forEach(num => {
     button.textContent = num;
     button.setAttribute("id", num);
     button.setAttribute("class", "number-button");
-    button.addEventListener("click", (e) => {updateDisplay(e.target.id)});
     numberDiv.appendChild(button);
 });
 
@@ -72,9 +71,15 @@ operators.forEach(op => {
     button.textContent = op.type;
     button.setAttribute("id", op.type);
     button.setAttribute("class", "operator-button");
-    button.addEventListener("click", (e) => {updateDisplay(e.target.id)});
     let div = document.getElementsByClassName(`${op.div}-operator-div`)[0];
     div.appendChild(button);
+});
+
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+        displayDiv.textContent += e.target.id;
+    });
 });
 
 function add(a, b) {
@@ -108,8 +113,4 @@ function operate(op, a, b) {
         result = divide(a, b);
     }
     return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
-}
-
-function updateDisplay(button){
-    displayDiv.textContent += button;
 }
