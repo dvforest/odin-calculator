@@ -5,12 +5,6 @@ const width = 200;
 const height = 300;
 const clampDecimals = 8;
 
-let input = {
-    a: 0,
-    b: 0,
-    operator: "",
-}
-
 // Create all the container divs
 
 const mainDiv = document.querySelector(".main-div");
@@ -67,29 +61,25 @@ operators.forEach(op => {
     div.appendChild(button);
 });
 
-// Function updating the display each time the user clicks a button
+// Update the display when a button is clicked
 
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
+        let str = displayDiv.textContent;
         let id = e.target.id;
-        let disp = displayDiv.textContent;
-        if (id === "="){
-            let op = disp.match(/-?\d+|[-+*/]/g); //store numbers (negative or not) and operators separately in an array
-            console.log(op);
-            // feed each elements of the array into the operate function
-            if (op.length === 2){
-                disp = operate("+", Number(op[0]), Number(op[1]));
-            }
-            if (op.length === 3){
-                disp = operate(op[1], Number(op[0]), Number(op[2]));
-            }
-        } 
-        else {
-            disp = disp.replace(/^0/, '');
-            disp += e.target.id;
+        let arr = tokenize(str);
+
+        if (isEqualSign(id)){
+            str = parse(arr);    
         }
-        displayDiv.textContent = disp;
+
+        else {
+            arr.push(id);
+            str = stringify(arr);
+        }
+        
+        displayDiv.textContent = str;
     });
 });
 
@@ -111,7 +101,7 @@ function divide(a, b) {
     return a / b;
 };
 
-function operate(op, a, b) {
+function operate(a, op, b) {
     let result = 0;
     if (op === "+") {
         result = add(a, b);
@@ -125,5 +115,26 @@ function operate(op, a, b) {
     if (op === "/") {
         result = divide(a, b);
     }
+    console.log(result);
     return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
+}
+
+function isEqualSign(char){
+    return (char === "=");
+}
+
+function tokenize(str) {
+    let arr = str.match(/-?\d+|[-+*/^]/g); //check for digits or operators;
+    return arr;
+}
+
+function parse(arr) {
+    console.log(arr);
+    let a = operate(Number(arr[0]), arr[1], Number(arr[2])); 
+    return a;
+}
+
+function stringify(arr) {
+    return arr.join('')
+              .replace(/^0/, ''); //remove zero from beginning
 }
