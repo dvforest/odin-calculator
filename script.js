@@ -71,7 +71,7 @@ buttons.forEach((button) => {
         let arr = tokenize(str);
 
         if (isEqualSign(id)){
-            str = parse(arr);    
+            str = operate(Number(arr[0]), arr[1], Number(arr[2]));    
         }
 
         else {
@@ -85,56 +85,38 @@ buttons.forEach((button) => {
 
 // Helper functions
 
-function add(a, b) {
-    return a + b;
-};
-
-function subtract(a, b) {
-    return a - b;
-};
-
-function multiply(a, b) {
-    return a * b;
-};
-
-function divide(a, b) {
-    return a / b;
-};
-
 function operate(a, op, b) {
-    let result = 0;
-    if (op === "+") {
-        result = add(a, b);
+    let result;
+    if (op === "+"){
+        result = a + b;
+        }
+    if (op === "-"){
+        result = a - b;
     }
-    if (op === "-") {
-        result = subtract(a, b);
+    if (op === "*"){
+        result = a * b;
     }
-    if (op === "*") {
-        result = multiply(a, b);
+    if (op === "/"){
+        result = a / b;
     }
-    if (op === "/") {
-        result = divide(a, b);
-    }
-    console.log(result);
     return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
 }
 
-function isEqualSign(char){
-    return (char === "=");
-}
-
 function tokenize(str) {
-    let arr = str.match(/-?\d+|[-+*/^]/g); //check for digits or operators;
+    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into numbers (int or float) and operators.
     return arr;
-}
-
-function parse(arr) {
-    console.log(arr);
-    let a = operate(Number(arr[0]), arr[1], Number(arr[2])); 
-    return a;
 }
 
 function stringify(arr) {
     return arr.join('')
               .replace(/^0/, ''); //remove zero from beginning
+}
+
+function isOperator(char){
+    const op = ["+", "-", "*", "/"];
+    return (op.includes(char));
+}
+
+function isEqualSign(char){
+    return (char === "=");
 }
