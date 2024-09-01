@@ -5,14 +5,7 @@
     margin-top: 50px;
 }
 
-.operation-div {
-    flex: 1 1 auto;
-    text-align: right;
-    font-size: 15px;
-    padding: 8px;
-}
-
-.input-div {
+.display-div {
     flex: 1 1 auto;
     border: 2px rgb(116, 116, 116) solid;
     text-align: right;
