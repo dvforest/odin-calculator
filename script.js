@@ -1,4 +1,6 @@
 
+// Main variables
+
 const width = 200;
 const height = 300;
 const clampDecimals = 8;
@@ -8,6 +10,8 @@ let input = {
     b: 0,
     operator: "",
 }
+
+// Create all the container divs
 
 const mainDiv = document.querySelector(".main-div");
 mainDiv.style.width = width + "px";
@@ -34,7 +38,10 @@ const rightOperatorDiv = document.createElement("div");
 rightOperatorDiv.setAttribute("class", "right-operator-div");
 bottomDiv.appendChild(rightOperatorDiv);
 
+// Create all the buttons
+
 const numbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
+
 numbers.forEach(num => {
     let button = document.createElement("button");
     button.textContent = num;
@@ -44,26 +51,11 @@ numbers.forEach(num => {
 });
 
 const operators = [
-    {
-        type: "/",
-        div: "top",
-    },
-    {
-        type: "*",
-        div: "top",
-    },
-    {
-        type: "-",
-        div: "top",
-    },
-    {
-        type: "+",
-        div: "right",
-    },
-    {
-        type: "=",
-        div: "right",
-    },
+    {type: "/", div: "top"},
+    {type: "*", div: "top"},
+    {type: "-", div: "top"},
+    {type: "+", div: "right"},
+    {type: "=", div: "right"},
 ];
 
 operators.forEach(op => {
@@ -75,12 +67,16 @@ operators.forEach(op => {
     div.appendChild(button);
 });
 
+// Function updating the display each time the user clicks a button
+
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
         displayDiv.textContent += e.target.id;
     });
 });
+
+// Helper functions
 
 function add(a, b) {
     return a + b;
