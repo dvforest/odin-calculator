@@ -72,7 +72,24 @@ operators.forEach(op => {
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
-        displayDiv.textContent += e.target.id;
+        let id = e.target.id;
+        let disp = displayDiv.textContent;
+        if (id === "="){
+            let op = disp.match(/-?\d+|[-+*/]/g); //store numbers (negative or not) and operators separately in an array
+            console.log(op);
+            // feed each elements of the array into the operate function
+            if (op.length === 2){
+                disp = operate("+", Number(op[0]), Number(op[1]));
+            }
+            if (op.length === 3){
+                disp = operate(op[1], Number(op[0]), Number(op[2]));
+            }
+        } 
+        else {
+            disp = disp.replace(/^0/, '');
+            disp += e.target.id;
+        }
+        displayDiv.textContent = disp;
     });
 });
 
