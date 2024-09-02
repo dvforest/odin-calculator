@@ -103,7 +103,7 @@ function operate(a, op, b) {
 }
 
 function tokenize(str) {
-    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into numbers (int or float) and operators.
+    let arr = str.match(/(?<!\d)-?\d+(\.\d+)?|[-+*/^]/g); //split into numbers (int or float) and operators.
     return arr;
 }
 
