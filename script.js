@@ -77,8 +77,18 @@ buttons.forEach((button) => {
             inputString = parseOperation(id);
         }
 
-        else if (hasinvalidInput(inputString)){
-            inputString = inputString.slice(0, -2) + inputString.slice(-1);
+        else if (hasInvalidInput(inputString)){
+            inputString = inputString.slice(0, -1) //backtrack
+        }
+
+        else if (hasdoubleOperators(inputString)){
+            inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
+        }
+
+        else if (hasFourTokens(inputString)){
+            inputString = inputString.slice(0, -1) //backtrack
+            inputString = parseOperation(id);
+            inputString += id;
         }
 
         displayDiv.textContent = inputString;
@@ -101,7 +111,7 @@ function operate(a, op, b) {
     if (op === "/"){
         result = a / b;
     }
-    return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
+    return Number(result.toFixed(clampDecimals)); // converting to Number() avoids 0s being added on integers
 }
 
 function parseOperation(id, trimLastOperator) {
@@ -116,7 +126,7 @@ function parseOperation(id, trimLastOperator) {
 }
 
 function tokenize(str) {
-    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into numbers (int or float) and operators.
+    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into tokens (numbers and operators).
     return arr;
 }
 
@@ -124,7 +134,18 @@ function isEqualSign(str) {
     return str === "=";
 }
 
-function hasinvalidInput(str) {
-    const regex = /[-+*/][+*/]/;
-    return (regex.test(str));
+function hasdoubleOperators(str) {
+    const doubleOp = /[-+*/][+*/]/;
+    return (doubleOp.test(str));
+}
+
+function hasInvalidInput(str) {
+    const doubleDecimal = /\d*\.\d*\./; //forbid double decimals
+    const negativeSign = /[-+*/]\-\D/; //a number must follow a second token starting with a negative sign
+    return (doubleDecimal.test(str) || negativeSign.test(str))
+}
+
+function hasFourTokens(str) {
+    let tokens = tokenize(str);
+    return (tokens.length === 4);
 }
