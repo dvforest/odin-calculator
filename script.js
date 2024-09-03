@@ -5,6 +5,9 @@ const width = 200;
 const height = 300;
 const clampDecimals = 8;
 
+let inputString = "";
+let inputTokens = [];
+
 // Create all the container divs
 
 const mainDiv = document.querySelector(".main-div");
@@ -68,23 +71,17 @@ buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
         let str = displayDiv.textContent;
         let id = e.target.id;
-        let arr = tokenize(str)
-        arr.push(id);
-        str = stringify(arr);
-        arr = tokenize(str);
-
+        inputString += id;
+        
         if (isEqualSign(id)) {
-            str = operate(Number(arr[0]), arr[1], Number(arr[2]));
+            inputString = parseOperation(id);
         }
 
-        else if (isOperator(id) && isNumber(arr[2])) {
-            str = operate(Number(arr[0]), arr[1], Number(arr[2]));
-            arr = tokenize(str);
-            arr.push(id);
-            str = stringify(arr);
+        else if (hasinvalidInput(inputString)){
+            inputString = inputString.slice(0, -2) + inputString.slice(-1);
         }
 
-        displayDiv.textContent = str;
+        displayDiv.textContent = inputString;
     });
 });
 
@@ -107,26 +104,27 @@ function operate(a, op, b) {
     return Number(result.toFixed(clampDecimals)); // Number() removes unnecessary zeros
 }
 
+function parseOperation(id, trimLastOperator) {
+    if (trimLastOperator === "trim"){
+        inputString = inputString.slice(0, -1);
+    }
+    inputTokens = tokenize(inputString)
+    let a = Number(inputTokens[0]);
+    let op = inputTokens[1];
+    let b = Number(inputTokens[2]);
+    return operate(a, op, b);
+}
+
 function tokenize(str) {
     let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into numbers (int or float) and operators.
     return arr;
 }
 
-function stringify(arr) {
-    return arr.join('')
-              .replace(/^0/, '') //remove zero from beginning
-              .replace(/\=/, ''); //remove equal signs
-}
-
-function isOperator(str){
-    const op = ["+", "-", "*", "/"];
-    return op.includes(str);
-}
-
-function isNumber(str){
-    return !isNaN(str);
-}
-
-function isEqualSign(str){
+function isEqualSign(str) {
     return str === "=";
+}
+
+function hasinvalidInput(str) {
+    const regex = /[-+*/][+*/]/;
+    return (regex.test(str));
 }
