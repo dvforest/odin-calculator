@@ -34,7 +34,7 @@ bottomDiv.appendChild(rightOperatorDiv);
 
 // Create all the buttons
 
-const numbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
+const numbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0, "."];
 
 numbers.forEach(num => {
     let button = document.createElement("button");
@@ -68,17 +68,22 @@ buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
         let str = displayDiv.textContent;
         let id = e.target.id;
-        let arr = tokenize(str);
+        let arr = tokenize(str)
+        arr.push(id);
+        str = stringify(arr);
+        arr = tokenize(str);
 
-        if (isEqualSign(id)){
-            str = operate(Number(arr[0]), arr[1], Number(arr[2]));    
+        if (isEqualSign(id)) {
+            str = operate(Number(arr[0]), arr[1], Number(arr[2]));
         }
 
-        else {
+        else if (isOperator(id) && isNumber(arr[2])) {
+            str = operate(Number(arr[0]), arr[1], Number(arr[2]));
+            arr = tokenize(str);
             arr.push(id);
             str = stringify(arr);
         }
-        
+
         displayDiv.textContent = str;
     });
 });
@@ -103,20 +108,25 @@ function operate(a, op, b) {
 }
 
 function tokenize(str) {
-    let arr = str.match(/(?<!\d)-?\d+(\.\d+)?|[-+*/^]/g); //split into numbers (int or float) and operators.
+    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into numbers (int or float) and operators.
     return arr;
 }
 
 function stringify(arr) {
     return arr.join('')
-              .replace(/^0/, ''); //remove zero from beginning
+              .replace(/^0/, '') //remove zero from beginning
+              .replace(/\=/, ''); //remove equal signs
 }
 
-function isOperator(char){
+function isOperator(str){
     const op = ["+", "-", "*", "/"];
-    return (op.includes(char));
+    return op.includes(str);
 }
 
-function isEqualSign(char){
-    return (char === "=");
+function isNumber(str){
+    return !isNaN(str);
+}
+
+function isEqualSign(str){
+    return str === "=";
 }
