@@ -6,11 +6,24 @@
 }
 
 .display-div {
+    display: flex;
     flex: 1 1 auto;
     border: 2px rgb(116, 116, 116) solid;
     text-align: right;
     font-size: 24px;
     padding: 15px;
+}
+
+.locked-div {
+    flex-grow: 1;
+    text-align: right;
+    color: blue;
+}
+
+.input-div {
+    flex-shrink: 1;
+    text-align: left;
+    color: red;
 }
 
 .top-operator-div {

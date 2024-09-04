@@ -16,8 +16,17 @@ mainDiv.style.height = height + "px";
 
 const displayDiv = document.createElement("div");
 displayDiv.setAttribute("class", "display-div");
-displayDiv.textContent = "0";
 mainDiv.appendChild(displayDiv);
+
+const lockedDiv = document.createElement("div");
+lockedDiv.setAttribute("class", "locked-div");
+lockedDiv.textContent = "locked";
+displayDiv.appendChild(lockedDiv);
+
+const inputDiv = document.createElement("div");
+inputDiv.setAttribute("class", "input-div");
+inputDiv.textContent = "0";
+displayDiv.appendChild(inputDiv);
 
 const topOperatorDiv = document.createElement("div");
 topOperatorDiv.setAttribute("class", "top-operator-div");
@@ -69,7 +78,7 @@ operators.forEach(op => {
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
-        let str = displayDiv.textContent;
+        let str = inputDiv.textContent;
         let id = e.target.id;
         inputString += id;
         
@@ -91,7 +100,7 @@ buttons.forEach((button) => {
             inputString += id;
         }
 
-        displayDiv.textContent = inputString;
+        inputDiv.textContent = inputString;
     });
 });
 
@@ -149,3 +158,10 @@ function hasFourTokens(str) {
     let tokens = tokenize(str);
     return (tokens.length === 4);
 }
+
+
+        // TO DO!
+        // add a check to make sure operation is valid
+        // prevent changing a result number by only allowing operators after = (could be a different color to make it visually clear)
+        // add a clear, and delete button
+        
