@@ -28,6 +28,7 @@
 
 .top-operator-div {
     display: flex;
+    height: 10%;
     flex: 1 1 auto;
 }
 
@@ -49,11 +50,14 @@
 }
 
 .number-button {
-    flex: 1 1 33%;
-    padding: 15px;    
+    flex: 1 0 33%;
 }
 
 .operator-button {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     padding: 15px;
+}
+
+[id="0"]{
+    flex: 1 0 66%;
 }

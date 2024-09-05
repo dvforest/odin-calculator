@@ -5,8 +5,9 @@ const width = 200;
 const height = 300;
 const clampDecimals = 8;
 
+let lockedString = "";
 let inputString = "";
-let inputTokens = [];
+let operationTokens = [];
 
 // Create all the container divs
 
@@ -20,7 +21,6 @@ mainDiv.appendChild(displayDiv);
 
 const lockedDiv = document.createElement("div");
 lockedDiv.setAttribute("class", "locked-div");
-lockedDiv.textContent = "locked";
 displayDiv.appendChild(lockedDiv);
 
 const inputDiv = document.createElement("div");
@@ -57,6 +57,7 @@ numbers.forEach(num => {
 });
 
 const operators = [
+    {type: "C", div:"top"},
     {type: "/", div: "top"},
     {type: "*", div: "top"},
     {type: "-", div: "top"},
@@ -78,28 +79,34 @@ operators.forEach(op => {
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
-        let str = inputDiv.textContent;
         let id = e.target.id;
         inputString += id;
+
+        if (isClearButton(id)) {
+            inputString = "0"
+            lockedString = ""
+        }
         
-        if (isEqualSign(id)) {
-            inputString = parseOperation(id);
+        if (isEqualSign(id)) { // clear input, put result in locked div
+            lockedString = parseOperation(id);
+            inputString = ""; 
         }
 
-        else if (hasInvalidInput(inputString)){
-            inputString = inputString.slice(0, -1) //backtrack
+        else if (hasInvalidInput(inputString)) { //if invalid, backtrack
+            inputString = inputString.slice(0, -1)
         }
 
-        else if (hasdoubleOperators(inputString)){
+        else if (hasdoubleOperators(inputString)) {
             inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
         }
 
-        else if (hasFourTokens(inputString)){
-            inputString = inputString.slice(0, -1) //backtrack
-            inputString = parseOperation(id);
+        else if (exceedesTokens(lockedString + inputString, 3)) { //backtrack, then parse operation and add operator back
+            inputString = inputString.slice(0, -1) 
+            lockedString = parseOperation(id);
             inputString += id;
         }
 
+        lockedDiv.textContent = lockedString;
         inputDiv.textContent = inputString;
     });
 });
@@ -123,14 +130,12 @@ function operate(a, op, b) {
     return Number(result.toFixed(clampDecimals)); // converting to Number() avoids 0s being added on integers
 }
 
-function parseOperation(id, trimLastOperator) {
-    if (trimLastOperator === "trim"){
-        inputString = inputString.slice(0, -1);
-    }
-    inputTokens = tokenize(inputString)
-    let a = Number(inputTokens[0]);
-    let op = inputTokens[1];
-    let b = Number(inputTokens[2]);
+function parseOperation(id) {
+    operationTokens = tokenize(lockedString + inputString)
+    console.log(operationTokens);
+    let a = Number(operationTokens[0]);
+    let op = operationTokens[1];
+    let b = Number(operationTokens[2]);
     return operate(a, op, b);
 }
 
@@ -141,6 +146,10 @@ function tokenize(str) {
 
 function isEqualSign(str) {
     return str === "=";
+}
+
+function isClearButton(str) {
+    return str === "C";
 }
 
 function hasdoubleOperators(str) {
@@ -154,14 +163,11 @@ function hasInvalidInput(str) {
     return (doubleDecimal.test(str) || negativeSign.test(str))
 }
 
-function hasFourTokens(str) {
+function exceedesTokens(str, limit) {
     let tokens = tokenize(str);
-    return (tokens.length === 4);
+    return (tokens.length > 3);
 }
-
 
         // TO DO!
         // add a check to make sure operation is valid
-        // prevent changing a result number by only allowing operators after = (could be a different color to make it visually clear)
-        // add a clear, and delete button
         
