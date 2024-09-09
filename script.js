@@ -81,14 +81,16 @@ buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
         let id = e.target.id;
         processInput(id);
+        button.blur(); //unfocus, otherwise pressing Enter will activate the button again;
     });
 });
 
 document.addEventListener("keydown", (e) => {
-    const validInputs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "+", "*", "/", "="]
     let id = e.key;
     id = (id === "Enter") ? "=" : id;
-    console.log(id);
+
+    const validInputs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "+", "*", "/", "=", "Backspace"];
+    
     if (validInputs.includes(id)) {
         processInput(id);
     }
@@ -127,52 +129,56 @@ function parseOperation() {
 }
 
 function processInput(id) {
-        inputString += id;
-
-        if (id === "C") {
-            lockedString = "0"
-            inputString = ""
+    inputString += id;
+    
+    if (id === "C") {
+        lockedString = "0"
+        inputString = ""
+    }
+    
+    if (id === "=") {
+        let result = parseOperation();
+        if (result) {
+            lockedString = result;
+            inputString = "";          
         }
-        
-        if (id === "=") {
-            let result = parseOperation();
-            if (result) {
-                lockedString = result;
-                inputString = "";          
-            }
-            else {
-                inputString = inputString.slice(0, -1) //backtrack
-            }
-        }
-
-        if (hasInvalidInput(inputString)) { 
+        else {
             inputString = inputString.slice(0, -1) //backtrack
         }
+    }
 
-        else if (hasdoubleOperators(inputString)) {
-            inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
-        }
+    if (id === "Backspace") {
+        inputString = inputString.slice(0, -10) //backtrack
+    }
 
-        else if (areBothNumbers(inputString, lockedString)) {
-            lockedString = "";
-        }
+    else if (hasInvalidInput(inputString)) { 
+        inputString = inputString.slice(0, -1) //backtrack
+    }
 
-        else if (exceedesTokens(3, lockedString + inputString)) { 
-            inputString = inputString.slice(0, -1) //backtrack
-            lockedString = parseOperation();
-            inputString = "" + id;
-        }
+    else if (hasdoubleOperators(inputString)) {
+        inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
+    }
 
-        if (inputString  === "" && lockedString === "") {
-            lockedString = "0";
-        }
+    else if (areBothNumbers(inputString, lockedString)) {
+        lockedString = "";
+    }
 
-        if (/^0\d/.test(inputString)) { //cut useless zero starting the str
-            inputString = inputString.substring(1);
-        }
+    else if (exceedesTokens(3, lockedString + inputString)) { 
+        inputString = inputString.slice(0, -1) //backtrack
+        lockedString = parseOperation();
+        inputString = "" + id;
+    }
 
-        lockedDiv.textContent = lockedString;
-        inputDiv.textContent = inputString;
+    if (inputString  === "" && lockedString === "") {
+        lockedString = "0";
+    }
+
+    if (/^0\d/.test(inputString)) { //cut useless zero starting the string
+        inputString = inputString.substring(1);
+    }
+
+    lockedDiv.textContent = lockedString;
+    inputDiv.textContent = inputString;
 }
 
 function tokenize(str) {
@@ -186,7 +192,7 @@ function hasdoubleOperators(str) {
 }
 
 function areBothNumbers(str, str2) {
-    const digit = /^\d+$/; //check if str consists only of digits
+    const digit = /^\d+$/; //check if string consists only of digits
     return (digit.test(str) && digit.test(str2));
 }
 
