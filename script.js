@@ -110,8 +110,8 @@ buttons.forEach((button) => {
             inputString = "0";
         }
 
-        if (inputString.length > 1 && inputString.substring(0, 1) === "0") { 
-            inputString = inputString.substring(1); //cut first character
+        if (/^0\d/.test(inputString)) { //check for useless zero starting the str
+            inputString = inputString.substring(1); //cut it
         }
 
         lockedDiv.textContent = lockedString;
