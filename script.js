@@ -5,8 +5,8 @@ const width = 200;
 const height = 300;
 const clampDecimals = 8;
 
-let lockedString = "";
-let inputString = "0";
+let lockedString = "0";
+let inputString = "";
 let operationTokens = [];
 
 // Create all the container divs
@@ -21,11 +21,11 @@ mainDiv.appendChild(displayDiv);
 
 const lockedDiv = document.createElement("div");
 lockedDiv.setAttribute("class", "locked-div");
+lockedDiv.textContent = "0";
 displayDiv.appendChild(lockedDiv);
 
 const inputDiv = document.createElement("div");
 inputDiv.setAttribute("class", "input-div");
-inputDiv.textContent = "0";
 displayDiv.appendChild(inputDiv);
 
 const topOperatorDiv = document.createElement("div");
@@ -83,13 +83,19 @@ buttons.forEach((button) => {
         inputString += id;
 
         if (id === "C") {
-            inputString = "0"
-            lockedString = ""
+            lockedString = "0"
+            inputString = ""
         }
         
         if (id === "=") {
-            lockedString = parseOperation(id);
-            inputString = ""; 
+            let result = parseOperation(id);
+            if (result === "invalid"){
+                inputString = inputString.slice(0, -1) //backtrack          
+            }
+            else {
+                lockedString = result;
+                inputString = "";
+            }
         }
 
         else if (hasInvalidInput(inputString)) { 
@@ -107,11 +113,11 @@ buttons.forEach((button) => {
         else if (exceedesTokens(lockedString + inputString, 3)) { 
             inputString = inputString.slice(0, -1) //backtrack
             lockedString = parseOperation(id);
-            inputString += id;
+            inputString = "" + id;
         }
 
         if (inputString  === "" && lockedString === "") {
-            inputString = "0";
+            lockedString = "0";
         }
 
         if (/^0\d/.test(inputString)) { //cut useless zero starting the str
@@ -139,16 +145,21 @@ function operate(a, op, b) {
     if (op === "/"){
         result = a / b;
     }
-    return Number(result.toFixed(clampDecimals)); // converting to Number() avoids 0s being added on integers
+
+    return Number(result.toFixed(clampDecimals)); // converting to Number() avoids 0s being added on integers; 
 }
 
 function parseOperation(id) {
     operationTokens = tokenize(lockedString + inputString)
-    console.log(operationTokens);
-    let a = Number(operationTokens[0]);
-    let op = operationTokens[1];
-    let b = Number(operationTokens[2]);
-    return operate(a, op, b);
+    if (operationTokens.length === 3) {
+        let a = Number(operationTokens[0]);
+        let op = operationTokens[1];
+        let b = Number(operationTokens[2]);
+        return operate(a, op, b);
+    }
+    else {
+        return "invalid";
+    }
 }
 
 function tokenize(str) {
@@ -157,12 +168,12 @@ function tokenize(str) {
 }
 
 function hasdoubleOperators(str) {
-    const doubleOp = /[-+*/][+*/]/;
+    const doubleOp = /[-+*/][+*/=]/;
     return (doubleOp.test(str));
 }
 
 function areBothNumbers(str, str2) {
-    const digit = /\d/; 
+    const digit = /^\d+$/; //check if it consists entirely of digits
     return (digit.test(str) && digit.test(str2));
 }
 
@@ -176,8 +187,3 @@ function exceedesTokens(str, limit) {
     let tokens = tokenize(str);
     return (tokens.length > 3);
 }
-
-
-        // TO DO!
-        // add a check to make sure operation is valid
-        
