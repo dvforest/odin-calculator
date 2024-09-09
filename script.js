@@ -100,6 +100,10 @@ buttons.forEach((button) => {
             inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
         }
 
+        else if (areBothNumbers(inputString, lockedString)) {
+            lockedString = "";
+        }
+
         else if (exceedesTokens(lockedString + inputString, 3)) { 
             inputString = inputString.slice(0, -1) //backtrack
             lockedString = parseOperation(id);
@@ -110,8 +114,8 @@ buttons.forEach((button) => {
             inputString = "0";
         }
 
-        if (/^0\d/.test(inputString)) { //check for useless zero starting the str
-            inputString = inputString.substring(1); //cut it
+        if (/^0\d/.test(inputString)) { //cut useless zero starting the str
+            inputString = inputString.substring(1);
         }
 
         lockedDiv.textContent = lockedString;
@@ -157,6 +161,11 @@ function hasdoubleOperators(str) {
     return (doubleOp.test(str));
 }
 
+function areBothNumbers(str, str2) {
+    const digit = /\d/; 
+    return (digit.test(str) && digit.test(str2));
+}
+
 function hasInvalidInput(str) {
     const doubleDecimal = /\d*\.\d*\./; //forbid double decimals
     const negativeSign = /[-+*/]\-\D/; //a number must follow a second token starting with a negative sign
@@ -167,6 +176,7 @@ function exceedesTokens(str, limit) {
     let tokens = tokenize(str);
     return (tokens.length > 3);
 }
+
 
         // TO DO!
         // add a check to make sure operation is valid
