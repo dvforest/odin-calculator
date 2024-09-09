@@ -74,59 +74,24 @@ operators.forEach(op => {
     div.appendChild(button);
 });
 
-// Update the display when a button is clicked
+// Create event listeners
 
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", (e) => {
         let id = e.target.id;
-        inputString += id;
-
-        if (id === "C") {
-            lockedString = "0"
-            inputString = ""
-        }
-        
-        if (id === "=") {
-            let result = parseOperation(id);
-            if (result === "invalid"){
-                inputString = inputString.slice(0, -1) //backtrack          
-            }
-            else {
-                lockedString = result;
-                inputString = "";
-            }
-        }
-
-        else if (hasInvalidInput(inputString)) { 
-            inputString = inputString.slice(0, -1) //backtrack
-        }
-
-        else if (hasdoubleOperators(inputString)) {
-            inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
-        }
-
-        else if (areBothNumbers(inputString, lockedString)) {
-            lockedString = "";
-        }
-
-        else if (exceedesTokens(lockedString + inputString, 3)) { 
-            inputString = inputString.slice(0, -1) //backtrack
-            lockedString = parseOperation(id);
-            inputString = "" + id;
-        }
-
-        if (inputString  === "" && lockedString === "") {
-            lockedString = "0";
-        }
-
-        if (/^0\d/.test(inputString)) { //cut useless zero starting the str
-            inputString = inputString.substring(1);
-        }
-
-        lockedDiv.textContent = lockedString;
-        inputDiv.textContent = inputString;
+        processInput(id);
     });
+});
+
+document.addEventListener("keydown", (e) => {
+    const validInputs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "+", "*", "/", "="]
+    let id = e.key;
+    id = (id === "Enter") ? "=" : id;
+    console.log(id);
+    if (validInputs.includes(id)) {
+        processInput(id);
+    }
 });
 
 // Helper functions
@@ -145,35 +110,83 @@ function operate(a, op, b) {
     if (op === "/"){
         result = a / b;
     }
-
-    return Number(result.toFixed(clampDecimals)); // converting to Number() avoids 0s being added on integers; 
+    return Number(result.toFixed(clampDecimals)); //Number() avoids 0s being added on integers
 }
 
-function parseOperation(id) {
-    operationTokens = tokenize(lockedString + inputString)
-    if (operationTokens.length === 3) {
-        let a = Number(operationTokens[0]);
-        let op = operationTokens[1];
-        let b = Number(operationTokens[2]);
+function parseOperation() {
+    let tokens = tokenize(lockedString + inputString);
+    if (tokens.length === 3) {
+        let a = Number(tokens[0]);
+        let op = tokens[1];
+        let b = Number(tokens[2]);
         return operate(a, op, b);
     }
     else {
-        return "invalid";
+        return false;
     }
 }
 
+function processInput(id) {
+        inputString += id;
+
+        if (id === "C") {
+            lockedString = "0"
+            inputString = ""
+        }
+        
+        if (id === "=") {
+            let result = parseOperation();
+            if (result) {
+                lockedString = result;
+                inputString = "";          
+            }
+            else {
+                inputString = inputString.slice(0, -1) //backtrack
+            }
+        }
+
+        if (hasInvalidInput(inputString)) { 
+            inputString = inputString.slice(0, -1) //backtrack
+        }
+
+        else if (hasdoubleOperators(inputString)) {
+            inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
+        }
+
+        else if (areBothNumbers(inputString, lockedString)) {
+            lockedString = "";
+        }
+
+        else if (exceedesTokens(3, lockedString + inputString)) { 
+            inputString = inputString.slice(0, -1) //backtrack
+            lockedString = parseOperation();
+            inputString = "" + id;
+        }
+
+        if (inputString  === "" && lockedString === "") {
+            lockedString = "0";
+        }
+
+        if (/^0\d/.test(inputString)) { //cut useless zero starting the str
+            inputString = inputString.substring(1);
+        }
+
+        lockedDiv.textContent = lockedString;
+        inputDiv.textContent = inputString;
+}
+
 function tokenize(str) {
-    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into tokens (numbers and operators).
+    let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into tokens (numbers and operators)
     return arr;
 }
 
 function hasdoubleOperators(str) {
-    const doubleOp = /[-+*/][+*/=]/;
+    const doubleOp = /[-+*/][+*/]/;
     return (doubleOp.test(str));
 }
 
 function areBothNumbers(str, str2) {
-    const digit = /^\d+$/; //check if it consists entirely of digits
+    const digit = /^\d+$/; //check if str consists only of digits
     return (digit.test(str) && digit.test(str2));
 }
 
@@ -183,7 +196,7 @@ function hasInvalidInput(str) {
     return (doubleDecimal.test(str) || negativeSign.test(str))
 }
 
-function exceedesTokens(str, limit) {
+function exceedesTokens(limit, str) {
     let tokens = tokenize(str);
-    return (tokens.length > 3);
+    return (tokens.length > limit);
 }
