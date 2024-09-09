@@ -6,7 +6,7 @@ const height = 300;
 const clampDecimals = 8;
 
 let lockedString = "";
-let inputString = "";
+let inputString = "0";
 let operationTokens = [];
 
 // Create all the container divs
@@ -82,28 +82,36 @@ buttons.forEach((button) => {
         let id = e.target.id;
         inputString += id;
 
-        if (id === "C") { // clear all
+        if (id === "C") {
             inputString = "0"
             lockedString = ""
         }
         
-        if (id === "=") { // clear input, put result in locked div
+        if (id === "=") {
             lockedString = parseOperation(id);
             inputString = ""; 
         }
 
-        else if (hasInvalidInput(inputString)) { //if invalid, backtrack
-            inputString = inputString.slice(0, -1)
+        else if (hasInvalidInput(inputString)) { 
+            inputString = inputString.slice(0, -1) //backtrack
         }
 
         else if (hasdoubleOperators(inputString)) {
             inputString = inputString.slice(0, -2) + inputString.slice(-1); //replace with new operator
         }
 
-        else if (exceedesTokens(lockedString + inputString, 3)) { //backtrack, then parse operation and add operator back
-            inputString = inputString.slice(0, -1) 
+        else if (exceedesTokens(lockedString + inputString, 3)) { 
+            inputString = inputString.slice(0, -1) //backtrack
             lockedString = parseOperation(id);
             inputString += id;
+        }
+
+        if (inputString  === "" && lockedString === "") {
+            inputString = "0";
+        }
+
+        if (inputString.length > 1 && inputString.substring(0, 1) === "0") { 
+            inputString = inputString.substring(1); //cut first character
         }
 
         lockedDiv.textContent = lockedString;
