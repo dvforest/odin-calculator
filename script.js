@@ -82,12 +82,12 @@ buttons.forEach((button) => {
         let id = e.target.id;
         inputString += id;
 
-        if (isClearButton(id)) {
+        if (id === "C") { // clear all
             inputString = "0"
             lockedString = ""
         }
         
-        if (isEqualSign(id)) { // clear input, put result in locked div
+        if (id === "=") { // clear input, put result in locked div
             lockedString = parseOperation(id);
             inputString = ""; 
         }
@@ -142,14 +142,6 @@ function parseOperation(id) {
 function tokenize(str) {
     let arr = str.match(/(?<!\d)-?\d+\.*\d*|[-+*/^]/g); //split into tokens (numbers and operators).
     return arr;
-}
-
-function isEqualSign(str) {
-    return str === "=";
-}
-
-function isClearButton(str) {
-    return str === "C";
 }
 
 function hasdoubleOperators(str) {
