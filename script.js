@@ -49,11 +49,15 @@ bottomDiv.appendChild(rightOperatorDiv);
 const numbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0, "."];
 
 numbers.forEach(num => {
+    let buttonContainer = document.createElement("div");
+    buttonContainer.setAttribute("class", "number-button-container")
+    numberDiv.appendChild(buttonContainer);
+
     let button = document.createElement("button");
     button.textContent = num;
     button.setAttribute("id", num);
     button.setAttribute("class", "number-button");
-    numberDiv.appendChild(button);
+    buttonContainer.appendChild(button);
 });
 
 const operators = [
@@ -66,12 +70,16 @@ const operators = [
 ];
 
 operators.forEach(op => {
+    let buttonContainer = document.createElement("div");
+    buttonContainer.setAttribute("class", "operator-button-container");
+    let div = document.getElementsByClassName(`${op.div}-operator-div`)[0];
+    div.appendChild(buttonContainer);
+
     let button = document.createElement("button");
     button.textContent = op.type;
     button.setAttribute("id", op.type);
     button.setAttribute("class", "operator-button");
-    let div = document.getElementsByClassName(`${op.div}-operator-div`)[0];
-    div.appendChild(button);
+    buttonContainer.appendChild(button);
 });
 
 // Create event listeners
